@@ -13,7 +13,6 @@ def doJob():
     dataFromPost = request.get_json()
     #Todo: Eval. Json
     data = None #Todo: Json fordert Konkrete Daten an. API Aushandeln
-    r = requests.get("http://localhost:80/data", json=data)
     #Todo: Funktions aufruf was daten bearbeitet
 
     data = None
@@ -36,7 +35,7 @@ def main():
     if docker:
         port = 80
     else:
-        port = 440
+        port = 441
     app.run(debug=True, host="0.0.0.0", port=port)
 
 
