@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 import requests
 import os
 
@@ -6,20 +6,18 @@ docker = False
 app = Flask(__name__)
 
 
-job = {"status": "running"}
+job = {"status": None, "result" : None}
+#Mögliche Stati running, done, idle
 
 @app.route("/doJob", methods=["POST"])
 def doJob():
     dataFromPost = request.get_json()
-    #Todo: Eval. Json
-    data = None #Todo: Json fordert Konkrete Daten an. API Aushandeln
-    #Todo: Funktions aufruf was daten bearbeitet
-
-    data = None
-    return jsonify(data)
+    #Todo: Funktions aufruf
+    return Response(status=200)
 
 @app.route("/jobStatus", methods=["GET"])
 def jobStatus():
+    #Todo: Status der Funktion anpassen
     return jsonify(job)
 
 
