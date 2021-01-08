@@ -1,4 +1,4 @@
-from NDVI import calculate, prepareData, calculate_with_dask
+from ndvi import calculate, prepareData, calculate_with_dask
 import xarray as xr
 import os
 #import ipytest
