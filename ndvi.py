@@ -118,4 +118,4 @@ def start(data):
     os.remove(FNAME_OUTPUT)
 
 
-start(data=0)
+'''start(data=0)'''
