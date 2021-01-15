@@ -1,4 +1,9 @@
-from ndvi import calculate, prepareData, calculate_with_dask
+import importlib.util
+spec = importlib.util.spec_from_file_location("ndvi", "/GeoSoftII_NDVI_Process/ndvi.py")
+ndvi = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ndvi)
+
+#from ndvi import calculate, prepareData, calculate_with_dask
 import xarray as xr
 import os
 import pytest
