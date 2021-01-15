@@ -2,12 +2,12 @@ import os,sys,inspect
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir) 
-#import ndvi
 
 from ndvi import calculate, prepareData, calculate_with_dask
 import xarray as xr
 import os
 import pytest
+import netCDF4
 
 
 def test_calculate():
