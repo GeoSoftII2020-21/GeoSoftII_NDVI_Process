@@ -1,36 +1,31 @@
+'''
+@author Magdalena Fischer <ma9dalen8: m09fischer@gmail.com>
+@author Cornelius Zerwas <neli98: cornelius.zerwas@t-online.de>
+'''
 import os
 import xarray as xr
 import dask
-from dask.distributed import Client, LocalCluster
-
-# cluster= LocalCluster()
-# client = Client (cluster)
-# client
+from dask import distributed
 
 
-FNAME_DATACUBE = "Datacube\Datadatacube_2020-06-01_T32UMC_R20.nc"
 FNAME_OUTPUT = "calculatedNDVI.nc"
 
 
-def prepareData(fname):
+def prepareData(data):
     '''
     Opens data cube and stores all available red and nir bands that are available for a given time horizon.
     Parameter:
-    fname : path of data cube
+    data : xarray containing filtered sentinel-2 data
     Return:
     red: includes all red bands of the given time horizon
     nir: includes all nir bands of the given time horizon
     '''
 
-    data = xr.open_dataset(fname)
-    '''should contain all available red's (from the same Tile)in one xarray'''
+    '''should contain all available reds (from the same Tile) in one xarray'''
     red = data.red
 
-    '''should contain all available nir's (from the same Tile) in one xarray'''
+    '''should contain all available nirs (from the same Tile) in one xarray'''
     nir = data.nir
-
-    # TODO filter data
-
     return red, nir
 
 
@@ -62,9 +57,8 @@ def calculate(red, nir, fname_output=None, sumNir=None, sumRed=None):
     '''iteration through all red and nir bands to summarize them. All red and all nir bands are added separately.'''
     i = 1
     while i < len(red):
-        # summerize all reds and nirs
+        '''summarize all reds and nirs'''
         sumRed = sumRed + red[i]
-
         sumNir = sumNir + nir[i]
 
         i += 1
@@ -90,6 +84,8 @@ def calculate_with_dask(red, nir, fname_output=None):
     red : array of all available red bands
     nir : array of all available nir bands
     fname_output : datacube of calculated NDVI (optional)
+    Return:
+    ndvi_xarray: calculated ndvi (xarray Dataset)
     '''
 
     '''initialize sumRed and sumNir as dask objects'''
@@ -106,16 +102,31 @@ def calculate_with_dask(red, nir, fname_output=None):
     '''load ndvi dataset, transformation to xarray'''
     if fname_output is not None:
         ndvi_xarray = xr.open_dataset(fname_output)
-        print(type(ndvi_xarray))
+
     return ndvi_xarray
 
 
 def start(data):
-    red, nir = prepareData(FNAME_DATACUBE)
-    calculate_with_dask(red, nir, FNAME_OUTPUT)
+    '''
+    for execution of the process
+    Parameter:
+    data: xarray containing sentinel-2 data (already filtered (time and boundingbox) and merged)
+    Return:
+    output: calculated ndvi (xarray.Dataset)
+    '''
+    red, nir = prepareData(data)
+    output = calculate_with_dask(red, nir, FNAME_OUTPUT)
     # calculate(red,nir, FNAME_OUTPUT)
     '''remove local file'''
+    # os.remove(FNAME_OUTPUT)
+    print(type(output))
+    return output
+
+
+if __name__ == '__main__':
+    '''create dask Cluster'''
+    client = distributed.Client()
+    '''execute start function'''
+    #start(data)
+    '''remove local file'''
     os.remove(FNAME_OUTPUT)
-
-
-'''start(data=0)'''
