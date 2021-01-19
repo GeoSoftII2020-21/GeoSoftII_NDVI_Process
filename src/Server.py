@@ -9,7 +9,7 @@ docker = False
 app = Flask(__name__)
 
 
-job = {"status": None, "result" : None}
+job = {"status": None, "result" : None, "jobid": None}
 #Mögliche Stati running, done, idle
 
 @app.route("/doJob/<uuid:id>", methods=["POST"])
@@ -26,6 +26,8 @@ def jobStatus():
 
 
 def job(dataFromPost, id):
+    job["status"] = "running"
+    job["jobid"] = str(id)
     dataset = xarray.load_dataset("data/" + str(id) + "/" + str(dataFromPost["arguments"]["data"]["from_node"]) + ".nc")
     x = ndvi.start(dataset)
     subid = uuid.uuid1()
