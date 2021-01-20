@@ -8,6 +8,7 @@ import xarray as xr
 import os
 import pytest
 import netCDF4
+import numpy as np
 
 
 def test_calculate():
