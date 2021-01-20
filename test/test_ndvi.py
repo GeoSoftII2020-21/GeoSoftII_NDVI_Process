@@ -29,11 +29,19 @@ def test_calculate():
         calculate(xr.DataArray([]), xr.DataArray([]))
 
 
-fname = r"..\Datacube\Datadatacube_2020-06-01_T32UMC_R20.nc"
+data = xr.Dataset(
+    {   "red": (("lat", "lon"),
+            20 * np.random.rand(4).reshape(2,2),),
+        "nir": (("lat", "lon"), np.random.rand(4).reshape(2,2)),},
+    coords={"lat": [10, 20], "lon": [150, 160]},
+    )
+data = data.expand_dims(time=(['2020,11,23','2020,11,24','2020,11,25','2020,11,26']))
+
+#fname = r"..\Datacube\Datadatacube_2020-06-01_T32UMC_R20.nc"
 
 def test_prepareData():
     '''test for valid return'''
-    assert type(prepareData(fname)) is not None
+    assert type(prepareData(data)) is not None
 
 def test_calculate_with_dask():
     '''test for valid return'''
