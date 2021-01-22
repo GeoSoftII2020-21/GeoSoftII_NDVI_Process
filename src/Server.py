@@ -9,14 +9,15 @@ docker = False
 app = Flask(__name__)
 
 
-job = {"status": None, "result" : None, "jobid": None}
+job = {"status": "idle", "result" : None, "jobid": None}
 #Mögliche Stati running, done, idle
 
 @app.route("/doJob/<uuid:id>", methods=["POST"])
 def doJob(id):
     dataFromPost = request.get_json()
-    job["status"] = "processing"
-    t = threading.Thread(target=job,args=(dataFromPost, id,))
+    job["status"] = "idle"
+    t = threading.Thread(target=jobndvi,args=(dataFromPost, id,))
+    t.start()
     return Response(status=200)
 
 @app.route("/jobStatus", methods=["GET"])
@@ -25,7 +26,7 @@ def jobStatus():
     return jsonify(job)
 
 
-def job(dataFromPost, id):
+def jobndvi(dataFromPost, id):
     job["status"] = "running"
     job["jobid"] = str(id)
     dataset = xarray.load_dataset("data/" + str(id) + "/" + str(dataFromPost["arguments"]["data"]["from_node"]) + ".nc")
