@@ -12,9 +12,7 @@ FNAME_DATACUBE = "Datacube\cube\datacube_2020-06-01_Merged_R100.nc"
 FNAME_OUTPUT = "calculatedNDVI.nc"
 
 
-
-
-def prepareData(fname):
+def prepareData(data):
     '''
     Opens data cube and stores all available red and nir bands that are available for a given time horizon.
     Parameter:
@@ -23,10 +21,8 @@ def prepareData(fname):
     red: includes all red bands of the given time horizon
     nir: includes all nir bands of the given time horizon
     '''
+    data.chunk(chunks={"time": "auto"})
 
-    # TODO input parameter  --> data (xarray), test modification
-
-    data = xr.open_dataset(fname)
     '''should contain all available reds (from the same Tile) in one xarray'''
     red = data.red
 
@@ -84,7 +80,6 @@ def calculate(red, nir, fname_output=None, sumNir=None, sumRed=None):
 
     return ndvi
 
-
 	
 def calculate_with_dask(red, nir, fname_output=None):
     '''
@@ -106,13 +101,8 @@ def calculate_with_dask(red, nir, fname_output=None):
 
     '''distribution of exercises to available workers '''
     ndvi.compute()
-    ndvi_xarray = xr.DataArray()
 
-    '''load ndvi dataset, transformation to xarray'''
-    if fname_output is not None:
-        ndvi_xarray = xr.open_dataset(fname_output)
-
-    return ndvi_xarray
+    return ndvi
 
 
 
@@ -124,20 +114,28 @@ def start(data):
     Return:
     output: calculated ndvi (xarray.Dataset)
     '''
-    red, nir = prepareData(FNAME_DATACUBE)
-    output = calculate_with_dask(red, nir, FNAME_OUTPUT)
-    #calculate(red,nir, FNAME_OUTPUT)
-    '''remove local file'''
-    #os.remove(FNAME_OUTPUT)
-    print(type(output))
-    return output
 
+    '''create dask Cluster'''
+    client=distributed.Client()
+    #client.scatter(data)
+    #client.submit(prepareData(), data)
+
+    red, nir = prepareData(data)
+    #calculate_with_dask(red, nir, FNAME_OUTPUT)
+    calculate(red,nir, FNAME_OUTPUT)
+
+    '''reload calculated NDVI as xarray'''
+    result = xr.open_dataset(FNAME_OUTPUT)
+    result.close()
+
+    '''remove local file'''
+    os.remove(FNAME_OUTPUT)
+
+    print(result)
+    return result
 
 
 if __name__ == '__main__':
-    '''create dask Cluster'''
-    client = distributed.Client()
+    data = xr.open_dataset(FNAME_DATACUBE) #, chunks={"time": "auto"})
     '''execute start function'''
-    start(data=0)
-    '''remove local file'''
-    os.remove(FNAME_OUTPUT)
+    start(data)
