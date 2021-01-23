@@ -9,21 +9,28 @@ docker = False
 app = Flask(__name__)
 
 
-job = {"status": "idle", "result" : None, "jobid": None}
+job = {"status": "idle", "result" : None, "jobid": None,"errorType":None}
 #Mögliche Stati running, done, idle
 
 @app.route("/doJob/<uuid:id>", methods=["POST"])
 def doJob(id):
     dataFromPost = request.get_json()
     job["status"] = "idle"
-    t = threading.Thread(target=jobndvi,args=(dataFromPost, id,))
+    t = threading.Thread(target=ndviwrapper,args=(dataFromPost, id,))
     t.start()
     return Response(status=200)
 
 @app.route("/jobStatus", methods=["GET"])
 def jobStatus():
-    #Todo: Status der Funktion anpassen
     return jsonify(job)
+
+def ndviwrapper(dataFromPost, id):
+    try:
+        jobndvi(dataFromPost, id)
+    except:
+        job["status"] = "error"
+        job["errorType"] = "Unkown Error"
+        return
 
 
 def jobndvi(dataFromPost, id):
