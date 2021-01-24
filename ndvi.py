@@ -21,7 +21,6 @@ def prepareData(data):
     red: includes all red bands of the given time horizon
     nir: includes all nir bands of the given time horizon
     '''
-    data.chunk(chunks={"time": "auto"})
 
     '''should contain all available reds (from the same Tile) in one xarray'''
     red = data.red
@@ -61,15 +60,13 @@ def calculate(red, nir, fname_output=None, sumNir=None, sumRed=None):
     while i < len(red):
         '''summarize all reds and nirs'''
         sumRed = sumRed + red[i]
-        sumNir = sumNir+nir[i]
+        sumNir = sumNir + nir[i]
 
         i += 1
-
     
     '''calculation of mean value of red and nir values'''
     sumRed = sumRed/len(red)
     sumNir = sumNir/len(nir)
-
 
     '''calculation of NDVI'''
     ndvi = (sumNir.astype(float)-sumRed.astype(float))/(sumNir+sumRed).astype(float)
@@ -92,6 +89,9 @@ def calculate_with_dask(red, nir, fname_output=None):
     ndvi_xarray: calculated ndvi (xarray Dataset)
     '''
 
+    '''create dask Cluster'''
+    distributed.Client()
+
     '''initialize sumRed and sumNir as dask objects'''
     sumRed = dask.delayed(red[0])
     sumNir = dask.delayed(nir[0])
@@ -105,7 +105,6 @@ def calculate_with_dask(red, nir, fname_output=None):
     return ndvi
 
 
-
 def start(data):
     '''
     for execution of the process
@@ -115,14 +114,9 @@ def start(data):
     output: calculated ndvi (xarray.Dataset)
     '''
 
-    '''create dask Cluster'''
-    client=distributed.Client()
-    #client.scatter(data)
-    #client.submit(prepareData(), data)
-
     red, nir = prepareData(data)
-    #calculate_with_dask(red, nir, FNAME_OUTPUT)
-    calculate(red,nir, FNAME_OUTPUT)
+    calculate_with_dask(red, nir, FNAME_OUTPUT)
+    #calculate(red,nir, FNAME_OUTPUT)
 
     '''reload calculated NDVI as xarray'''
     result = xr.open_dataset(FNAME_OUTPUT)
@@ -131,11 +125,11 @@ def start(data):
     '''remove local file'''
     os.remove(FNAME_OUTPUT)
 
-    print(result)
     return result
 
 
 if __name__ == '__main__':
-    data = xr.open_dataset(FNAME_DATACUBE) #, chunks={"time": "auto"})
+    data = xr.open_dataset(FNAME_DATACUBE, chunks={"time": "auto"})
+
     '''execute start function'''
     start(data)
