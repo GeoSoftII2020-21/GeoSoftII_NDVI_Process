@@ -6,20 +6,25 @@ import os
 import xarray as xr
 import dask
 from dask import distributed
+import numpy as np
+import pyproj
+
 
 
 FNAME_DATACUBE = "Datacube\cube\datacube_2020-06-01_Merged_R100.nc"
 FNAME_OUTPUT = "calculatedNDVI.nc"
+#bb_EPSG32632 = [400000.00,5748775.00,415000.00,5767500.00] '''leftlong,bottomlat,rightlong,toplat, EPSG:32632'''
+bb_EPSG4326=[7.54167,51.880772,7.760397,52.051578]
 
-
-def prepareData(data):
+def prepareData(data, bb = [-999,-999,-999,-999]):
     '''
-    Opens data cube and stores all available red and nir bands that are available for a given time horizon.
+    selects the data that lays within the bounding box of all available red and nir bands. Converts the input bounding box to required coordinate system.
     Parameter:
-    fname : path of data cube
+    data : input datacube (filtered by time)
+    bb: containig the coordinates for the area of interest (EPSG:4326)
     Return:
-    red: includes all red bands of the given time horizon
-    nir: includes all nir bands of the given time horizon
+    red: includes all red bands of the given time horizon within the given bounding box
+    nir: includes all nir bands of the given time horizon within the given bounding box
     '''
 
     '''should contain all available reds (from the same Tile) in one xarray'''
@@ -27,6 +32,32 @@ def prepareData(data):
 
     '''should contain all available nirs (from the same Tile) in one xarray'''
     nir = data.nir
+    '''should contain all available latitudes (from the same Tile) in one xarray'''
+    lat = data.lat
+    '''should contain all available longitudes (from the same Tile) in one xarray'''
+    lon = data.lon
+
+
+    if bb != [-999,-999,-999,-999]:
+        '''transfomation from epsg 4326 to epsg 32632'''
+        bblat=[bb[1]]
+        bblon=[bb[0]]
+        bblat.append(bb[3])
+        bblon.append(bb[2])
+
+        epsg4326 = pyproj.Proj(init = "epsg:4326")
+        epsg32632 = pyproj.Proj(init = "epsg:32632")
+        bblon, bblat =pyproj.transform(epsg4326, epsg32632, bblon, bblat)
+
+
+        '''creating boolean mask depending on the given area'''
+        latlon_mask = np.logical_not((lat <= bblat[0]) | (lat >= bblat[1]) | (lon <= bblon[0]) | (lon >= bblon[1]))
+
+        '''mapping the mask on the values'''
+        nir = nir.where(latlon_mask)
+        red = red.where(latlon_mask)
+        
+
     return red, nir
 
 
@@ -114,7 +145,7 @@ def start(data):
     output: calculated ndvi (xarray.Dataset)
     '''
 
-    red, nir = prepareData(data)
+    red, nir = prepareData(data,bb_EPSG4326)
     calculate_with_dask(red, nir, FNAME_OUTPUT)
     #calculate(red,nir, FNAME_OUTPUT)
 
