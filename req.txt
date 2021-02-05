@@ -7,3 +7,4 @@ dask[complete]==2.30.0
 numpy==1.19.3
 scipy
 netcdf4
+pyproj

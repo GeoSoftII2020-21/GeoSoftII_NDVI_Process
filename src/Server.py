@@ -5,6 +5,7 @@ import threading
 import ndvi
 import xarray
 import uuid
+import sys
 docker = False
 app = Flask(__name__)
 
@@ -27,6 +28,7 @@ def jobStatus():
 def ndviwrapper(dataFromPost, id):
     try:
         jobndvi(dataFromPost, id)
+
     except:
         job["status"] = "error"
         job["errorType"] = "Unkown Error"
@@ -37,7 +39,14 @@ def jobndvi(dataFromPost, id):
     job["status"] = "running"
     job["jobid"] = str(id)
     dataset = xarray.load_dataset("data/" + str(id) + "/" + str(dataFromPost["arguments"]["data"]["from_node"]) + ".nc")
-    x = ndvi.start(dataset)
+    bb = dataFromPost["arguments"]["bb"]
+    try:
+        x = ndvi.start(dataset, bb)
+    except:
+        job["status"] = "error"
+        job["errorType"] = "TimeframeLengthError"
+        print(sys.exc_info())
+        return
     subid = uuid.uuid1()
     x.to_netcdf("data/" + str(id) + "/" + str(subid) + ".nc")
     job["id"] = str(subid)
