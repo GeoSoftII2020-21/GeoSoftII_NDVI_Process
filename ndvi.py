@@ -136,7 +136,7 @@ def calculate_with_dask(red, nir, fname_output=None):
     return ndvi
 
 
-def start(data):
+def start(data, bb_EPSG4326):
     '''
     for execution of the process
     Parameter:
@@ -163,4 +163,4 @@ if __name__ == '__main__':
     data = xr.open_dataset(FNAME_DATACUBE, chunks={"time": "auto"})
 
     '''execute start function'''
-    start(data)
+    start(data, bb_EPSG4326)
