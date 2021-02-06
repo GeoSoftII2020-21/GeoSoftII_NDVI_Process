@@ -13,7 +13,7 @@ import pyproj
 
 FNAME_DATACUBE = "Datacube\cube\datacube_2020-06-01_Merged_R100.nc"
 FNAME_OUTPUT = "calculatedNDVI.nc"
-#bb_EPSG32632 = [400000.00,5748775.00,415000.00,5767500.00] '''leftlong,bottomlat,rightlong,toplat, EPSG:32632'''
+''' bb_EPSG32632 = [399621.66574785963,5748782.569931421, 415000.0260141061, 5767500.019963231] leftlong,bottomlat,rightlong,toplat, EPSG:32632'''
 bb_EPSG4326=[7.54167,51.880772,7.760397,52.051578]
 
 def prepareData(data, bb = [-999,-999,-999,-999]):
@@ -25,11 +25,11 @@ def prepareData(data, bb = [-999,-999,-999,-999]):
     Return:
     red: includes all red bands of the given time horizon within the given bounding box
     nir: includes all nir bands of the given time horizon within the given bounding box
+    bb: includes the bounding box with the converted coordinates
     '''
 
     '''should contain all available reds (from the same Tile) in one xarray'''
     red = data.red
-
     '''should contain all available nirs (from the same Tile) in one xarray'''
     nir = data.nir
     '''should contain all available latitudes (from the same Tile) in one xarray'''
@@ -48,7 +48,7 @@ def prepareData(data, bb = [-999,-999,-999,-999]):
         epsg4326 = pyproj.Proj(init = "epsg:4326")
         epsg32632 = pyproj.Proj(init = "epsg:32632")
         bblon, bblat =pyproj.transform(epsg4326, epsg32632, bblon, bblat)
-
+        bb = [bblat,bblon]
 
         '''creating boolean mask depending on the given area'''
         latlon_mask = np.logical_not((lat <= bblat[0]) | (lat >= bblat[1]) | (lon <= bblon[0]) | (lon >= bblon[1]))
@@ -56,9 +56,10 @@ def prepareData(data, bb = [-999,-999,-999,-999]):
         '''mapping the mask on the values'''
         nir = nir.where(latlon_mask)
         red = red.where(latlon_mask)
-        
+        #print(nir.values)
+        print(bb)
 
-    return red, nir
+    return red, nir, bb
 
 
 def calculate(red, nir, fname_output=None, sumNir=None, sumRed=None):
@@ -145,7 +146,7 @@ def start(data, bb_EPSG4326):
     output: calculated ndvi (xarray.Dataset)
     '''
 
-    red, nir = prepareData(data,bb_EPSG4326)
+    red, nir, bb = prepareData(data,bb_EPSG4326)
     calculate_with_dask(red, nir, FNAME_OUTPUT)
     #calculate(red,nir, FNAME_OUTPUT)
 
