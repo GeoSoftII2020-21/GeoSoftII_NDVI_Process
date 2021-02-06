@@ -1,14 +1,20 @@
+'''
+@author Magdalena Fischer <ma9dalen8: m09fischer@gmail.com>
+@author Cornelius Zerwas <neli98: cornelius.zerwas@t-online.de>
+'''
+
 import os,sys,inspect
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir) 
+sys.path.insert(0, parent_dir)
 
-from ndvi import calculate, prepareData, calculate_with_dask
+
+from ndvi2 import calculate, prepareData, calculate_with_dask
 import xarray as xr
 import os
 import pytest
-import netCDF4
 import numpy as np
+
 
 
 def test_calculate():
@@ -29,7 +35,6 @@ def test_calculate():
     with pytest.raises(ValueError):
         calculate(xr.DataArray([]), xr.DataArray([]))
 
-
 data = xr.Dataset(
     {   "red": (("lat", "lon"),
             20 * np.random.rand(4).reshape(2,2),),
@@ -38,11 +43,23 @@ data = xr.Dataset(
     )
 data = data.expand_dims(time=(['2020,11,23','2020,11,24','2020,11,25','2020,11,26']))
 
-#fname = r"..\Datacube\Datadatacube_2020-06-01_T32UMC_R20.nc"
 
 def test_prepareData():
     '''test for valid return'''
     assert type(prepareData(data)) is not None
+
+    red, nir, bb = prepareData(data, bb=[7.54167, 51.880772, 7.760397, 52.051578])
+    '''tests if the coordinate transformation is correct'''
+    assert bb == [[5748782.569931421, 5767500.019963231], [399621.66574785963, 415000.0260141061]]
+
+    '''testing for valid boundingbox type'''
+    assert type(bb == 'list')
+
+    '''testing if the transformed red data is in the required numpy.ndarray formate'''
+    assert type(red.data == 'numpy.ndarray')
+
+    '''testing if the transformed nir data is in the required numpy.ndarray formate'''
+    assert type(nir.data == 'numpy.ndarray')
 
 def test_calculate_with_dask():
     '''test for valid return'''
