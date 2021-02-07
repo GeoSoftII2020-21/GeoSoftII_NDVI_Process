@@ -9,7 +9,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 
-from ndvi2 import calculate, prepareData, calculate_with_dask
+from ndvi import calculate, prepareData, calculate_with_dask
 import xarray as xr
 import os
 import pytest
