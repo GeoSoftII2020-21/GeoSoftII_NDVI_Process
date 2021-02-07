@@ -46,6 +46,15 @@ Der Microservice soll über Endpoints aufrufbar sein, leider sind noch keine ver
 
 
 #### Verwendete Software
-:bangbang: Software hinzufügen
 Software | Version
 ------ | ------
+Flask | 1.1.2
+requests | 2.25.0
+flask_cors | 3.0.9
+xarray | 0.16.2
+dask[complete] | 2020.12.0
+distributed | 2020.12.0
+numpy | 1.19.2
+netcdf4 | 1.5.4
+pyproj | 2.6.1
+numpy | 1.19.2
