@@ -11,10 +11,15 @@ app = Flask(__name__)
 
 
 job = {"status": "idle", "result" : None, "jobid": None,"errorType":None}
-#Mögliche Stati running, done, idle
+
 
 @app.route("/doJob/<uuid:id>", methods=["POST"])
 def doJob(id):
+    """
+    Takes a given NDVI job and Processes it
+    :param id:
+    :return:
+    """
     dataFromPost = request.get_json()
     job["status"] = "idle"
     t = threading.Thread(target=ndviwrapper,args=(dataFromPost, id,))
@@ -23,9 +28,19 @@ def doJob(id):
 
 @app.route("/jobStatus", methods=["GET"])
 def jobStatus():
+    """
+    Returns the Job Status
+    :return:
+    """
     return jsonify(job)
 
 def ndviwrapper(dataFromPost, id):
+    """
+    wrapper function for the ndvi
+    :param dataFromPost:
+    :param id:
+    :return:
+    """
     try:
         jobndvi(dataFromPost, id)
 
@@ -36,6 +51,12 @@ def ndviwrapper(dataFromPost, id):
 
 
 def jobndvi(dataFromPost, id):
+    """
+    ndvi processing
+    :param dataFromPost:
+    :param id:
+    :return:
+    """
     job["status"] = "running"
     job["jobid"] = str(id)
     dataset = xarray.load_dataset("data/" + str(id) + "/" + str(dataFromPost["arguments"]["data"]["from_node"]) + ".nc")
@@ -55,7 +76,7 @@ def jobndvi(dataFromPost, id):
 
 def main():
     """
-    Startet den Server. Aktuell im Debug Modus und Reagiert auf alle eingehenden Anfragen auf Port 80.
+    Starts server.
     """
     global docker
     if os.environ.get("DOCKER") == "True":
