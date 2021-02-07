@@ -1,7 +1,7 @@
-'''
-@author Magdalena Fischer <ma9dalen8: m09fischer@gmail.com>
-@author Cornelius Zerwas <neli98: cornelius.zerwas@t-online.de>
-'''
+
+#@author Magdalena Fischer <ma9dalen8: m09fischer@gmail.com>
+#@author Cornelius Zerwas <neli98: cornelius.zerwas@t-online.de>
+
 
 import os,sys,inspect
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
