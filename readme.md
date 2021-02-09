@@ -43,7 +43,7 @@ The monthly mean NDVI calculations are triggered via the central method 'start',
 First, the monthly mean-value of all red and all nir values is calculated seperately. After that, the calculated red and nir values are inserted in the following NDVI-formula: (nir - red) / (nir + red). For doing so, calculations can be executed by using dask optionally. 
 
 
-![NDVI June 2020 Münster](https://github.com/GeoSoftII2020-21/GeoSoftII_NDVI_Process/tree/master/images/NDVI_June_2020.svg)
+![NDVI June 2020 Münster](https://github.com/GeoSoftII2020-21/GeoSoftII_NDVI_Process/blob/master/images/NDVI_June_%202020.svg)
 
 #### API Endpunkte
 Der Microservice soll über Endpoints aufrufbar sein, leider sind noch keine verfügbar.
