@@ -25,7 +25,7 @@ Außerdem gibt es ein [Docker Repository](https://hub.docker.com/repository/dock
 
 Die Installation und Ausführung des Containers erfolgt über den Befehl:
 ```
-docker run -p 3000:3000 felixgi1516/geosoft2_ndvi_process
+docker run -p 441:441 felixgi1516/geosoft2_ndvi_process
 ````
 
 \
