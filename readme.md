@@ -34,17 +34,17 @@ docker run -p 3000:3000 felixgi1516/geosoft2_ndvi_process
 
 #### Zentrale Funktionalität
 
-:bangbang: ÜBERSETZEN
-
 The monthly mean NDVI calculations are triggered via the central method 'start', which takes 2 parameters:
 
-data A datacube in netCDF format. The datacube must have the dimensions 'lon', 'lat' and 'time' and the data variables 'nir' and 'red'.
+`data` A datacube in netCDF format containing all available Sentinel2-data of one month. The datacube must have the dimensions 'lon', 'lat' and 'time' and the data variables 'nir' and 'red'.
 
-bb_EPSG4326 A bounding box with four values in EPSG:4326 : [min Longitude, min Latitude, max Longitude, max Latitude]. For example [7, 51.5, 8, 52.2] for an area containing the city of Münster. This parameter is optional. If this parameter isn't specified the mean will be calculated over the whole spatial dimension of the dataset.
+`bb_EPSG4326` A bounding box with four values in EPSG:4326 : [min Longitude, min Latitude, max Longitude, max Latitude]. For example [7, 51.5, 8, 52.2] for an area containing the city of Münster. This parameter is optional. If this parameter isn't specified the mean will be calculated over the whole spatial dimension of the dataset.
 
-NDVI calculations are based on the following formula: (nir - red) / (nir + red).
+First, the monthly mean-value of all red and all nir values is calculated seperately. After that, the calculated red and nir values are inserted in the following NDVI-formula: (nir - red) / (nir + red). For doing so, calculations can be executed by using dask optionally. 
+
 
 :bangbang: Bilder des Endergebnisses können noch eingefügt werden
+
 
 #### API Endpunkte
 Der Microservice soll über Endpoints aufrufbar sein, leider sind noch keine verfügbar.
