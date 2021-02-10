@@ -19,7 +19,7 @@ In doing so, the user story: "Sentinel2 Datensatz um Münster auf NDVI untersuch
 In addition, there is a [Docker Repository](https://hub.docker.com/repository/docker/felixgi1516/geosoft2_ndvi_process), which is linked to this and from which the service can be obtained as an image after completion. And then is used locally as a container.
 
 \
-<a name="install"><h3>Installation</h3></a>.
+<a name="install"><h3>Installation</h3></a>
 The installation and execution is possible exclusively provided within the framework of the *[docker-compose.yml](https://github.com/GeoSoftII2020-21/GeoSoftII_Projekt/blob/Docker-compose/docker-compose.yml)*.
 ```docker
 docker-compose up
