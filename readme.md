@@ -7,7 +7,7 @@
 [2. Installation](#install) \
 [3. Scope of functionalities](#functionalities)  \
 [4. Examples of use](#use) \
-[5. Appendix](#annex) \
+[5. Appendix](#annex)
 
 \
 <a name="overview"><h3>Overview</h3></a>
@@ -48,8 +48,7 @@ First, the monthly mean-value of all red and all nir values is calculated sepera
 \
 <a name="annex"><h3>Appendix</h3></a>
 
-
-#### Used software
+#### Technologies
 Software | Version
 ------ | ------
 Flask | 1.1.2
