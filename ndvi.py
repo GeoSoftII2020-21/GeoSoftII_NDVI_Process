@@ -56,8 +56,6 @@ def prepareData(data, bb = [-999,-999,-999,-999]):
         '''mapping the mask on the values'''
         nir = nir.where(latlon_mask)
         red = red.where(latlon_mask)
-        #print(nir.values)
-        print(bb)
 
     return red, nir, bb
 
