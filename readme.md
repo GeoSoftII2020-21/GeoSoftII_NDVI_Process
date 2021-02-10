@@ -1,27 +1,27 @@
 # GeoSoftII_NDVI_Process
-### Geosoftware II Projekt WiSe 2020/21
+### Geosoftware II Project WiSe 2020/21
 ---
 
-## Inhaltsverzeichnis
-[1. Übersicht](#overview) \
+## Table of contents
+[1. Overview](#overview) \
 [2. Installation](#install) \
-[3. Anwendung](#use) \
-  3.1. Zentrale Funktionalität \
-  3.2. API Endpunkte \
-[4. Anhang](#annex)
+[3. Application](#use) \
+  3.1. Central functionality \
+  3.2. API endpoints
+[4. Appendix](#annex)
 
 \
-<a name="overview"><h3>Übersicht</h3></a>
-Dieses Projekt ist ein Teil für einen neuen [openEO](https://openeo.org/) Backenddriver der mit [Pangeo Software Stack](https://pangeo.io/) arbeitet.
+<a name="overview"><h3>Overview</h3></a>
+This project is a part for a new [openEO](https://openeo.org/) backend driver working with [Pangeo Software Stack](https://pangeo.io/).
 
-Ziel ist die vom [Dataserver](https://github.com/GeoSoftII2020-21/GeoSoftII_DataServer) bereitgestellten Datacubes auf den NDVI zu untersuchen.
-Dabei wird konkret die User Story: "Sentinel2 Datensatz um Münster auf NDVI untersuchen" des Pflichtenheftes umgesetzt.
+The goal is to examine the datacubes provided by the [Dataserver](https://github.com/GeoSoftII2020-21/GeoSoftII_DataServer) for the NDVI.
+In doing so, the user story: "Sentinel2 Datensatz um Münster auf NDVI untersuchen" of the requirements specification is implemented.
 
-Außerdem gibt es ein [Docker Repository](https://hub.docker.com/repository/docker/felixgi1516/geosoft2_ndvi_process), welches mit diesem verlinkt ist und über das nach Fertigstellung der Service als Image bezogen werden. Und dann als Container lokal genutzt werden kann.
+In addition, there is a [Docker Repository](https://hub.docker.com/repository/docker/felixgi1516/geosoft2_ndvi_process), which is linked to this and from which the service can be obtained as an image after completion. And then is used locally as a container.
 
 \
-<a name="install"><h3>Installation</h3></a>
-Die Installation und Ausführung ist exklusiv im Rahmen des zur verfügung gestellten *[docker-compose.yml](https://github.com/GeoSoftII2020-21/GeoSoftII_Projekt/blob/Docker-compose/docker-compose.yml)* möglich
+<a name="install"><h3>Installation</h3></a>.
+The installation and execution is possible exclusively provided within the framework of the *[docker-compose.yml](https://github.com/GeoSoftII2020-21/GeoSoftII_Projekt/blob/Docker-compose/docker-compose.yml)*.
 ```docker
 docker-compose up
 ```
@@ -29,7 +29,7 @@ docker-compose up
 <a name="use"><h3>Anwendung</h3></a>
 
 
-#### Zentrale Funktionalität
+#### Central functionality
 
 The monthly mean NDVI calculations are triggered via the central method 'start', which takes 2 parameters:
 
@@ -43,15 +43,15 @@ First, the monthly mean-value of all red and all nir values is calculated sepera
 ![NDVI June 2020 Münster](https://github.com/GeoSoftII2020-21/GeoSoftII_NDVI_Process/blob/master/images/NDVI_June_%202020.svg)
 (This picture is not an output of the calculation. It is externally visualized with QGIS.)
 
-#### API Endpunkte
+#### API endpoints
 
-- `POST /doJob/{job_id}` Nimmt einen Job entgegen welcher Prozessiert wird.
-- `GET /jobstatus` Gibt einen JSON mit dem Job Status zurück.
+- POST /doJob/{job_id}` Receives a job which is being processed.
+- GET /jobstatus` Returns a JSON with the job status.
 \
-<a name="annex"><h3>Anhang</h3></a>
+<a name="annex"><h3>Appendix</h3></a>
 
 
-#### Verwendete Software
+#### Used software
 Software | Version
 ------ | ------
 Flask | 1.1.2
