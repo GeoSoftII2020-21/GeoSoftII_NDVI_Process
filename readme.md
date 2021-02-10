@@ -44,6 +44,7 @@ First, the monthly mean-value of all red and all nir values is calculated sepera
 
 
 ![NDVI June 2020 Münster](https://github.com/GeoSoftII2020-21/GeoSoftII_NDVI_Process/blob/master/images/NDVI_June_%202020.svg)
+(This picture is not an output of the calculation. It is externally visualized with QGIS.)
 
 #### API Endpunkte
 Der Microservice soll über Endpoints aufrufbar sein, leider sind noch keine verfügbar.
