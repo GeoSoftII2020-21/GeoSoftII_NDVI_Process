@@ -5,10 +5,9 @@
 ## Table of contents
 [1. Overview](#overview) \
 [2. Installation](#install) \
-[3. Application](#use) \
-  3.1. Central functionality \
-  3.2. API endpoints
-[4. Appendix](#annex)
+[3. Scope of functionalities](#functionalities)  \
+[4. Examples of use](#use) \
+[5. Appendix](#annex) \
 
 \
 <a name="overview"><h3>Overview</h3></a>
@@ -26,11 +25,7 @@ The installation and execution is possible exclusively provided within the frame
 docker-compose up
 ```
 \
-<a name="use"><h3>Anwendung</h3></a>
-
-
-#### Central functionality
-
+<a name="use"><h3>Scope of functionalities</h3></a>
 The monthly mean NDVI calculations are triggered via the central method 'start', which takes 2 parameters:
 
 `data` A datacube in netCDF format containing all available Sentinel2-data of one month. The datacube must have the dimensions 'lon', 'lat' and 'time' and the data variables 'nir' and 'red'.
@@ -39,14 +34,17 @@ The monthly mean NDVI calculations are triggered via the central method 'start',
 
 First, the monthly mean-value of all red and all nir values is calculated seperately. After that, the calculated red and nir values are inserted in the following NDVI-formula: (nir - red) / (nir + red). For doing so, calculations can be executed by using dask optionally. 
 
-
-![NDVI June 2020 Münster](https://github.com/GeoSoftII2020-21/GeoSoftII_NDVI_Process/blob/master/images/NDVI_June_%202020.svg)
-(This picture is not an output of the calculation. It is externally visualized with QGIS.)
-
 #### API endpoints
 
 - POST /doJob/{job_id}` Receives a job which is being processed.
 - GET /jobstatus` Returns a JSON with the job status.
+
+\
+<a name="use"><h3>Examples of use</h3></a>
+
+![NDVI June 2020 Münster](https://github.com/GeoSoftII2020-21/GeoSoftII_NDVI_Process/blob/master/images/NDVI_June_%202020.svg)
+(This picture is externally visualized with QGIS and is not an output of the calculation. )
+
 \
 <a name="annex"><h3>Appendix</h3></a>
 
